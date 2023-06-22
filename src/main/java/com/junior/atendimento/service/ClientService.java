@@ -1,12 +1,12 @@
 package com.junior.atendimento.service;
 
-import java.util.List;
+import java.util.Optional;
 
 import com.junior.atendimento.entity.Client;
 
 public interface ClientService {
 	
-	List<Client> getAll();
-	Client  getById(Integer id);
+	Iterable<Client> getAll();
+	Optional<Client>  getById(Integer id);
 	
 }
