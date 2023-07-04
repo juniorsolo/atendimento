@@ -31,6 +31,9 @@ public class ClientServiceImpl implements ClientService{
 		return repository.findById(id);
 	}
 	
-	
+	@Override
+	public Client save(Client client) {
+		return repository.save(client);
+	}
 	
 }

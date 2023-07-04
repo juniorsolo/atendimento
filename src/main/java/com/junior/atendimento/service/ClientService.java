@@ -8,5 +8,6 @@ public interface ClientService {
 	
 	Iterable<Client> getAll();
 	Optional<Client>  getById(Integer id);
+    Client save(Client client);
 	
 }
