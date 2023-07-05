@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,44 +30,57 @@ public class ClienteController {
 		try {
 			Iterable<Client> list = clientService.getAll();
 			if(list != null) {
-				Gson gson = new Gson();
-				String json = gson.toJson(list);
-				return ResponseEntity.ok().body(json);
+				return ResponseEntity.ok().body(this.convertObjetToJson(list));
 			}			
 		}catch (Exception e) {
 			log.error(e.getMessage());
 		}
-		return ResponseEntity.badRequest().body("Error");
+		return ResponseEntity.badRequest().body("Client get All Error!");
 	}
 	
 	@GetMapping(value = "client/{id}", produces = MediaType.APPLICATION_JSON_VALUE )
 	public ResponseEntity<String> getClientById(@PathVariable Integer id) {
 		try {
-			Optional<Client> optional = clientService.getById(id);
-			if(optional.isPresent()) {
-				Gson gson = new Gson();
-				String json = gson.toJson(optional.get());
-				return ResponseEntity.ok().body(json);
+			Optional<Client> opt = clientService.getById(id);
+			if(opt.isPresent()) {
+				return ResponseEntity.ok().body(this.convertObjetToJson(opt.get()));
 			}
 		}catch (Exception e) {
 			log.error(e);
 		}
-		return ResponseEntity.badRequest().body("Error");
+		return ResponseEntity.badRequest().body("Client find by ID Error!");
 	}
 	
 	@PostMapping(value ="client" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> saveClient(@RequestBody Client client){
 		try {
-			Client c = clientService.save(client);
-			if(c != null) {
-				Gson gson = new Gson();
-				String json = gson.toJson(c);
-				return ResponseEntity.ok().body(json);
+			Client save = clientService.save(client);
+			if(save != null) {
+				return ResponseEntity.ok().body(this.convertObjetToJson(save));
 			}
 		}catch (Exception e) {
 			log.error(e);
 		}
-		return ResponseEntity.badRequest().body("Error");
+		return ResponseEntity.badRequest().body("Save Client Error!");
+	}
+	
+	@PutMapping(value = "client", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> updateClient(@RequestBody Client client){
+		try {
+			Client update = clientService.update(client);
+			if(update != null) {
+				return ResponseEntity.ok(this.convertObjetToJson(update));
+			}
+		}catch (Exception e) {
+			log.error(e);
+		}
+		return ResponseEntity.badRequest().body("Update Client Error!");
+	}
+	
+	private String convertObjetToJson(Object o) {
+		Gson gson = new Gson();
+		String json = gson.toJson(o);
+		return json;
 	}
 }
 
