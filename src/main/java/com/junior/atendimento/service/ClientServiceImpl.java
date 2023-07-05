@@ -61,4 +61,18 @@ public class ClientServiceImpl implements ClientService{
 		}
 	}
 	
+	@Override
+	public void delete(Client client) throws ServiceException{
+		try {
+			if(client != null && client.getId() != null 
+			  && repository.existsById(client.getId())) {
+				repository.delete(client);
+				return;
+			}
+			throw new Exception("Client not found, unable delete.");
+		}catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
+	}
 }

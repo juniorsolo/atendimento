@@ -10,5 +10,6 @@ public interface ClientService {
 	Optional<Client>  getById(Integer id) throws ServiceException;
     Client save(Client client) throws ServiceException;
     Client update(Client client) throws ServiceException;
+    void delete(Client client) throws ServiceException;
 	
 }
