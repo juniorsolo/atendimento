@@ -1,6 +1,7 @@
 package com.junior.atendimento.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,23 @@ public class CustomerServiceImpl implements CustomerService{
 	private CustomerServiceRepository customerServRepo;
 	
 	@Override
-	public Iterable<CustomerServiceEntity> getAll() throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CustomerServiceEntity> getAll() throws ServiceException {
+		try {
+			return customerServRepo.getAll();
+		}catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override
 	public Optional<CustomerServiceEntity> getById(Integer id) throws ServiceException {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		try {
+			return customerServRepo.findById(id);
+		}catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override
@@ -43,13 +52,31 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public CustomerServiceEntity update(CustomerServiceEntity customer) throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			if(customer != null && customer.getId() != null 
+			  && customerServRepo.existsById(customer.getId())) {
+				return customerServRepo.save(customer);
+			}
+			throw new Exception("Customer not found, unable to update.");
+		}catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override
 	public void delete(CustomerServiceEntity customer) throws ServiceException {
-		// TODO Auto-generated method stub
+		try {
+			if(customer != null && customer.getId() != null 
+			  && customerServRepo.existsById(customer.getId())) {
+				customerServRepo.delete(customer);
+				return;
+			}
+			throw new Exception("Client not found, unable delete.");
+		}catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 		
 	}
 
