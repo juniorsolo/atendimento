@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.junior.atendimento.entity.Client;
+import com.junior.atendimento.entity.ClientEntity;
 import com.junior.atendimento.service.ClientService;
 
 import lombok.extern.log4j.Log4j2;
@@ -24,12 +24,12 @@ import lombok.extern.log4j.Log4j2;
 public class ClienteController {
 	
 	@Autowired
-	ClientService clientService;
+	private ClientService clientService;
 	
 	@GetMapping(value = "client", produces = MediaType.APPLICATION_JSON_VALUE )
 	public ResponseEntity<String> getClient() {
 		try {
-			Iterable<Client> list = clientService.getAll();
+			Iterable<ClientEntity> list = clientService.getAll();
 			if(list != null) {
 				return ResponseEntity.ok().body(this.convertObjetToJson(list));
 			}			
@@ -42,7 +42,7 @@ public class ClienteController {
 	@GetMapping(value = "client/{id}", produces = MediaType.APPLICATION_JSON_VALUE )
 	public ResponseEntity<String> getClientById(@PathVariable Integer id) {
 		try {
-			Optional<Client> opt = clientService.getById(id);
+			Optional<ClientEntity> opt = clientService.getById(id);
 			if(opt.isPresent()) {
 				return ResponseEntity.ok().body(this.convertObjetToJson(opt.get()));
 			}
@@ -53,9 +53,9 @@ public class ClienteController {
 	}
 	
 	@PostMapping(value ="client" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> saveClient(@RequestBody Client client){
+	public ResponseEntity<String> saveClient(@RequestBody ClientEntity client){
 		try {
-			Client save = clientService.save(client);
+			ClientEntity save = clientService.save(client);
 			if(save != null) {
 				return ResponseEntity.ok().body(this.convertObjetToJson(save));
 			}
@@ -66,9 +66,9 @@ public class ClienteController {
 	}
 	
 	@PutMapping(value = "client", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> updateClient(@RequestBody Client client){
+	public ResponseEntity<String> updateClient(@RequestBody ClientEntity client){
 		try {
-			Client update = clientService.update(client);
+			ClientEntity update = clientService.update(client);
 			if(update != null) {
 				return ResponseEntity.ok(this.convertObjetToJson(update));
 			}
@@ -79,7 +79,7 @@ public class ClienteController {
 	}
 	
 	@DeleteMapping(value = "client", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> deleteClient(@RequestBody Client client){
+	public ResponseEntity<String> deleteClient(@RequestBody ClientEntity client){
 		try {
 			clientService.delete(client);
 			return ResponseEntity.ok("Sucess");

@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.junior.atendimento.entity.Client;
+import com.junior.atendimento.entity.ClientEntity;
 
-public interface ClientRepository extends CrudRepository<Client, Integer>{
-	List<Client> findAll();
+public interface ClientRepository extends CrudRepository<ClientEntity, Integer>{
+	List<ClientEntity> findAll();
 }
