@@ -1,7 +1,9 @@
 package com.junior.atendimento.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,14 +21,17 @@ public class CustomerServiceEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
-	private LocalDateTime dataTime;
+	
+	private LocalDate dataOpen;
+	
+	private LocalTime timeOpen;
 	
 	private String problem;
 	
 	private String solution;
 	
 	@ManyToOne
+	@JsonBackReference
 	private ClientEntity client;
 	
 	

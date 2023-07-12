@@ -1,6 +1,7 @@
 package com.junior.atendimento.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public List<CustomerServiceEntity> getAll() throws ServiceException {
 		try {
-			return customerServRepo.getAll();
+			return customerServRepo.findAll();
 		}catch (Exception e) {
 			log.error(e);
 			throw new ServiceException(e);
@@ -42,7 +43,8 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public CustomerServiceEntity save(CustomerServiceEntity customer) throws ServiceException {
 		try {
-			customer.setDataTime(LocalDateTime.now());
+			customer.setDataOpen(LocalDateTime.now().toLocalDate());
+			customer.setTimeOpen(LocalTime.now());
 			return customerServRepo.save(customer);
 		}catch (Exception e) {
 			log.error(e);

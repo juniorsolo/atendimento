@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.junior.atendimento.entity.ClientEntity;
 import com.junior.atendimento.service.ClientService;
 
@@ -27,11 +30,11 @@ public class ClienteController {
 	private ClientService clientService;
 	
 	@GetMapping(value = "client", produces = MediaType.APPLICATION_JSON_VALUE )
-	public ResponseEntity<String> getClient() {
+	public ResponseEntity<String> getAllClient() {
 		try {
 			Iterable<ClientEntity> list = clientService.getAll();
 			if(list != null) {
-				return ResponseEntity.ok().body(this.convertObjetToJson(list));
+				return ResponseEntity.ok().body(this.convertObjectToJson(list));
 			}			
 		}catch (Exception e) {
 			log.error(e.getMessage());
@@ -44,7 +47,7 @@ public class ClienteController {
 		try {
 			Optional<ClientEntity> opt = clientService.getById(id);
 			if(opt.isPresent()) {
-				return ResponseEntity.ok().body(this.convertObjetToJson(opt.get()));
+				return ResponseEntity.ok().body(this.convertObjectToJson(opt.get()));
 			}
 		}catch (Exception e) {
 			log.error(e);
@@ -57,7 +60,7 @@ public class ClienteController {
 		try {
 			ClientEntity save = clientService.save(client);
 			if(save != null) {
-				return ResponseEntity.ok().body(this.convertObjetToJson(save));
+				return ResponseEntity.ok().body(this.convertObjectToJson(save));
 			}
 		}catch (Exception e) {
 			log.error(e);
@@ -70,7 +73,7 @@ public class ClienteController {
 		try {
 			ClientEntity update = clientService.update(client);
 			if(update != null) {
-				return ResponseEntity.ok(this.convertObjetToJson(update));
+				return ResponseEntity.ok(this.convertObjectToJson(update));
 			}
 		}catch (Exception e) {
 			log.error(e);
@@ -89,9 +92,11 @@ public class ClienteController {
 		return ResponseEntity.badRequest().body("Update Client Error!");
 	}
 	
-	private String convertObjetToJson(Object o) {
-		Gson gson = new Gson();
-		String json = gson.toJson(o);
+	private String convertObjectToJson(Object o) throws JsonProcessingException {
+		ObjectMapper mapper = JsonMapper.builder()
+			    .addModule(new JavaTimeModule())
+			    .build();
+		String json = mapper.writeValueAsString(o);
 		return json;
 	}
 }
