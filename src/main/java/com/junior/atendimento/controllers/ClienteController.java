@@ -3,6 +3,7 @@ package com.junior.atendimento.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,16 +44,19 @@ public class ClienteController {
 	}
 	
 	@GetMapping(value = "client/{id}", produces = MediaType.APPLICATION_JSON_VALUE )
-	public ResponseEntity<String> getClientById(@PathVariable Integer id) {
+	public ResponseEntity<ClientEntity> getClientById(@PathVariable Integer id) {
 		try {
 			Optional<ClientEntity> opt = clientService.getById(id);
 			if(opt.isPresent()) {
-				return ResponseEntity.ok().body(this.convertObjectToJson(opt.get()));
+				opt.get().add(linkTo(ClienteController.class).slash(opt.get().getId()).withSelfRel());
+//				opt.get().add(linkTo(ClienteController.class).withRel("clients"));
+				opt.get().add(linkTo(methodOn(ClienteController.class).getAllClient()).withRel("clients"));
+				return ResponseEntity.ok().body(opt.get());
 			}
 		}catch (Exception e) {
 			log.error(e);
 		}
-		return ResponseEntity.badRequest().body("Client find by ID Error!");
+		return ResponseEntity.badRequest().body(null);
 	}
 	
 	@PostMapping(value ="client" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

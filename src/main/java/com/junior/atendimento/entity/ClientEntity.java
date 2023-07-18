@@ -2,6 +2,8 @@ package com.junior.atendimento.entity;
 
 import java.util.List;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -12,11 +14,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "client")
 @Data
-public class ClientEntity {
+@EqualsAndHashCode(callSuper = false)
+public class ClientEntity extends RepresentationModel<ClientEntity>{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
