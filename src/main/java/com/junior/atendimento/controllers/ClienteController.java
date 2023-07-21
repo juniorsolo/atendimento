@@ -27,6 +27,8 @@ import lombok.extern.log4j.Log4j2;
 @RestController
 public class ClienteController {
 	
+	private static String ALL_CLIENT = "clients";
+	
 	@Autowired
 	private ClientService clientService;
 	
@@ -49,8 +51,7 @@ public class ClienteController {
 			Optional<ClientEntity> opt = clientService.getById(id);
 			if(opt.isPresent()) {
 				opt.get().add(linkTo(ClienteController.class).slash(opt.get().getId()).withSelfRel());
-//				opt.get().add(linkTo(ClienteController.class).withRel("clients"));
-				opt.get().add(linkTo(methodOn(ClienteController.class).getAllClient()).withRel("clients"));
+				opt.get().add(linkTo(methodOn(ClienteController.class).getAllClient()).withRel(ALL_CLIENT));
 				return ResponseEntity.ok().body(opt.get());
 			}
 		}catch (Exception e) {
@@ -64,6 +65,8 @@ public class ClienteController {
 		try {
 			ClientEntity save = clientService.save(client);
 			if(save != null) {
+				save.add(linkTo(methodOn(ClienteController.class).getClientById(save.getId())).withSelfRel());
+				save.add(linkTo(methodOn(ClienteController.class).getAllClient()).withRel(ALL_CLIENT));
 				return ResponseEntity.ok().body(this.convertObjectToJson(save));
 			}
 		}catch (Exception e) {
@@ -77,6 +80,8 @@ public class ClienteController {
 		try {
 			ClientEntity update = clientService.update(client);
 			if(update != null) {
+				update.add(linkTo(methodOn(ClienteController.class).getClientById(update.getId())).withSelfRel());
+				update.add(linkTo(methodOn(ClienteController.class).getAllClient()).withRel(ALL_CLIENT));
 				return ResponseEntity.ok(this.convertObjectToJson(update));
 			}
 		}catch (Exception e) {
